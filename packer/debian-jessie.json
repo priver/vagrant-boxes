@@ -32,7 +32,7 @@
             "disk_size": "{{user `disk_size`}}",
             "guest_os_type": "Debian_64",
             "hard_drive_interface": "sata",
-            "headless": false,
+            "headless": true,
             "http_directory": "http",
             "iso_checksum": "{{user `iso_sha512`}}",
             "iso_checksum_type": "sha512",
