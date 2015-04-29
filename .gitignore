@@ -1,0 +1,7 @@
+packer/build/
+packer/output-virtualbox-iso/
+packer/packer_cache/
+
+*.sublime-project
+*.sublime-workspace
+.DS_Store

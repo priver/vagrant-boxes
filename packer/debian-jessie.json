@@ -1,0 +1,71 @@
+
+{
+    "variables": {
+        "iso_url": "http://cdimage.debian.org/debian-cd/8.0.0/amd64/iso-cd/debian-8.0.0-amd64-netinst.iso",
+        "iso_sha512": "95b46c1c8cb3a02f7b65b5de5dd57d335424684e4b605c2786b168b4851bc17b0b6bf4a53ba22a701532d01883ff4de393ad896ed5595e6c8fd1652d0e3e5690",
+        "cpus": 1,
+        "memory": 512,
+        "disk_size": 40960
+    },
+    "builders": [
+        {
+            "type": "virtualbox-iso",
+            "boot_command": [
+                "<esc><wait>",
+                "install ",
+                "preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed_jessie.cfg ",
+                "debian-installer=en_US ",
+                "auto ",
+                "locale=en_US ",
+                "kbd-chooser/method=us ",
+                "keyboard-configuration/xkb-keymap=us ",
+                "netcfg/get_hostname={{ .Name }} ",
+                "netcfg/get_domain=vagrantup.com ",
+                "netcfg/hostname={{ .Name }} ",
+                "fb=false ",
+                "debconf/frontend=noninteractive ",
+                "console-setup/ask_detect=false ",
+                "console-keymaps-at/keymap=us ",
+                "<enter><wait>"
+            ],
+            "boot_wait": "10s",
+            "disk_size": "{{user `disk_size`}}",
+            "guest_os_type": "Debian_64",
+            "hard_drive_interface": "sata",
+            "headless": false,
+            "http_directory": "http",
+            "iso_checksum": "{{user `iso_sha512`}}",
+            "iso_checksum_type": "sha512",
+            "iso_url": "{{user `iso_url`}}",
+            "ssh_username": "vagrant",
+            "ssh_password": "vagrant",
+            "ssh_port": 22,
+            "ssh_wait_timeout": "10000s",
+            "shutdown_command": "echo 'vagrant' | sudo -S /sbin/shutdown -hP now",
+            "guest_additions_path": "VBoxGuestAdditions_{{.Version}}.iso",
+            "virtualbox_version_file": ".vbox_version",
+            "vm_name": "vagrant-debian-jessie",
+            "vboxmanage": [
+                ["modifyvm", "{{.Name}}", "--memory", "{{user `memory`}}"],
+                ["modifyvm", "{{.Name}}", "--cpus", "{{user `cpus`}}"]
+            ]
+        }
+    ],
+    "post-processors": [
+        {
+            "type": "vagrant",
+            "output": "build/debian-jessie-amd64_{{.Provider}}.box",
+            "only": ["virtualbox-iso"]
+        }
+    ],
+    "provisioners": [
+        {
+            "type": "shell",
+            "execute_command": "echo 'vagrant' | {{.Vars}} sudo -E -S bash '{{.Path}}'",
+            "scripts": [
+                "scripts/debian/update.sh"
+            ],
+            "only": ["virtualbox-iso"]
+        }
+    ]
+}
