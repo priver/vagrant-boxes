@@ -1,4 +1,4 @@
-#!/bin/sh -eux
+#!/bin/sh
 
 # Whiteout the swap partition to reduce box size
 # Swap is disabled till reboot
