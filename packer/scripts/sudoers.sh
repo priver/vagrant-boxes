@@ -10,7 +10,6 @@ cat <<EOF > /tmp/sudoers
 # See the man page for details on how to write a sudoers file.
 #
 Defaults        env_reset
-Defaults        env_keep += "HOME"
 Defaults        mail_badpass
 Defaults        secure_path="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 
